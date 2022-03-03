@@ -28,7 +28,7 @@ from utils.torch_utils import select_device, load_classifier, time_sync
 
 
 @torch.no_grad()
-def run(weights='yolov5s.pt',  # model.pt path(s)
+def run(weights='yolov5x.pt',  # model.pt path(s)
         source='data/images',  # file/dir/URL/glob, 0 for webcam
         imgsz=640,  # inference size (pixels)
         conf_thres=0.25,  # confidence threshold
@@ -154,7 +154,6 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
                 if tfl_int8:
                     scale, zero_point = output_details[0]['quantization']
                     pred = (pred.astype(np.float32) - zero_point) * scale
-
             pred[..., 0] *= imgsz[1]  # x
             pred[..., 1] *= imgsz[0]  # y
             pred[..., 2] *= imgsz[1]  # w
@@ -245,6 +244,8 @@ def run(weights='yolov5s.pt',  # model.pt path(s)
 
 def parse_opt():
     parser = argparse.ArgumentParser()
+    print("checkpoint1002")
+    print(parser)
     parser.add_argument('--weights', nargs='+', type=str, default='yolov5s.pt', help='model.pt path(s)')
     parser.add_argument('--source', type=str, default='data/images', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
@@ -270,6 +271,8 @@ def parse_opt():
     parser.add_argument('--hide-conf', default=False, action='store_true', help='hide confidences')
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--tfl-int8', action='store_true', help='INT8 quantized TFLite model')
+    print("checkpoint1003")
+    print(parser)
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     return opt
@@ -278,11 +281,15 @@ def parse_opt():
 def main(opt):
     print(colorstr('detect: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
     check_requirements(exclude=('tensorboard', 'thop'))
+    print("checkpoint1004")
+    print(**vars(opt))
     run(**vars(opt))
 
 
 if __name__ == "__main__":
     opt = parse_opt()
+    # opt = "--weights weights/best_yolo5x_signsv2.pt --img 640 --conf 0.4 --source ./inference/images/"
     print("Checkpoint0000")
     print(opt)
+    print("Checkpoint0001")
     main(opt)
